@@ -1,0 +1,100 @@
+- hosts: localhost
+  vars:
+    adminPassword: 0d087db021fb4217aa20044ca3f36ce6
+  tasks: 
+
+  - name: Debug
+    debug:
+      msg: "{{adminPassword}}"
+
+  - name: Get Jenkins crumb
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://198.211.104.211:8080/crumbIssuer/api/json"
+      return_content: yes
+    register: jenkins_crumb
+    until: jenkins_crumb.content.find('Please wait while Jenkins is getting ready to work') == -1
+    retries: 10
+    delay: 5
+
+  - name: Set crumb token
+    set_fact:
+      jenkins_crumb_token: "{{ jenkins_crumb.json.crumbRequestField }}={{ jenkins_crumb.json.crumb }}"
+
+  - name: debug crumb
+    debug:
+      msg: "{{jenkins_crumb.json.crumb}}"
+
+  - name: Get list of jobs
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://198.211.104.211:8080/api/json?tree=jobs[name]"
+      return_content: yes
+    register: jenkins_jobs
+    until: jenkins_jobs.content.find('Please wait while Jenkins is getting ready to work') == -1
+    retries: 10
+    delay: 5
+
+  - name: Check if provision job exists
+    set_fact:
+      jenkins_provision_job_exists: "{{ 'checkbox_provision' in (jenkins_jobs.content|from_json).jobs|map(attribute='name')|list }}"
+
+  - name: Check if build job exists
+    set_fact:
+      jenkins_build_job_exists: "{{ 'checkbox_build' in (jenkins_jobs.content|from_json).jobs|map(attribute='name')|list }}"
+
+  - name: Create checkbox provision job
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://198.211.104.211:8080/createItem?name=checkbox_provision&{{ jenkins_crumb_token }}"
+      method: POST
+      headers:
+        Content-Type: application/xml
+      body: "{{ lookup('file','checkbox_job1/config.xml') }}"
+    register: jenkins_provision_job_updated
+    when: not jenkins_provision_job_exists
+
+  - name: Create checkbox build job
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://198.211.104.211:8080/createItem?name=checkbox_build&{{ jenkins_crumb_token }}"
+      method: POST
+      headers:
+        Content-Type: application/xml
+      body: "{{ lookup('file','checkbox_job2/config.xml') }}"
+    register: jenkins_build_job_updated
+    when: not jenkins_build_job_exists
+
+  #- name: Run build job
+    #uri:
+      #user: admin
+      #password: "{{adminPassword.stdout}}"
+      #force_basic_auth: yes
+      #url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
+      #method: POST
+      #headers:
+        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      #status_code: 201
+
+  #- name: Run provision job
+    #uri:
+      #user: admin
+      #password: "{{adminPassword.stdout}}"
+      #force_basic_auth: yes
+      #url: "http://127.0.0.1:8080/job/checkbox_provision/build"
+      #method: POST
+      #headers:
+        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      #status_code: 201
+ 
+
+
+
