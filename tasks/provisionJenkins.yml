@@ -119,6 +119,18 @@
   with_items: 
     - git
 
+- name: Wait for plugins to be installed
+  uri:
+    user: admin
+    password: "{{adminPassword.stdout}}"
+    force_basic_auth: yes
+    url: "http://127.0.0.1:8080/updateCenter/installStatus?{{ jenkins_crumb_token }}"
+    return_content: yes
+  register: jenkins_plugin_status
+  until: "'Pending' not in jenkins_plugin_status.json.data.jobs|map(attribute='installStatus')"
+  retries: 60
+  delay: 10
+  
 - name: Restart Jenkins to activate new plugins
   service: name=jenkins state=restarted
 
