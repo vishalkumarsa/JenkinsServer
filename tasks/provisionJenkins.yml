@@ -39,7 +39,7 @@
 - name: Install jre
   apt: name=openjdk-8-jre state=present
 
-- name: Install Jenskins
+- name: Install Jenkins
   apt:
     name: jenkins
     state: present
@@ -80,6 +80,11 @@
     state: present
     line: jenkins ALL=(ALL:ALL) ALL
     insertafter: EOF
+
+- name: Generate SSH keys
+  shell: ssh-keygen -b 2048 -t rsa -f /var/lib/jenkins/.ssh/id_rsa -q -N ""
+  args:
+    creates: /var/lib/jenkins/.ssh/id_rsa
 
 
 
