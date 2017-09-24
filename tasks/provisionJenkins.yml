@@ -74,6 +74,13 @@
     name: ansible
     state: present
 
+- name: sudoers
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    line: jenkins ALL=(ALL:ALL) ALL
+    insertafter: EOF
+
 
 
 - name: get admin password
@@ -112,6 +119,11 @@
   with_items: 
     - git
 
+- name: Restart Jenkins to activate new plugins
+  service: name=jenkins state=restarted
+
+- name: Wait for Jenkins to become available
+  wait_for: port=8080
 
 
 
