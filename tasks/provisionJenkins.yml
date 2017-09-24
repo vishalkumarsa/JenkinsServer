@@ -78,7 +78,7 @@
   lineinfile:
     dest: /etc/sudoers
     state: present
-    line: jenkins ALL=(ALL:ALL) ALL
+    line: jenkins ALL=(ALL) NOPASSWD:ALL
     insertafter: EOF
 
 - name: Generate SSH keys
