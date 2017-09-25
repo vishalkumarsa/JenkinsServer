@@ -1,6 +1,4 @@
-- hosts: localhost
-  
-  tasks: 
+
   
   - name: get admin password
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
@@ -76,28 +74,15 @@
     register: jenkins_build_job_updated
     when: not jenkins_build_job_exists
 
-  - name: Run build job
-    uri:
-      user: admin
-      password: "{{adminPassword.stdout}}"
-      force_basic_auth: yes
-      url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
-      method: POST
-      headers:
-        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      status_code: 201
-
-  #- name: Run provision job
-    #uri:
-      #user: admin
-      #password: "{{adminPassword.stdout}}"
-      #force_basic_auth: yes
-      #url: "http://127.0.0.1:8080/job/checkbox_provision/build"
-      #method: POST
-      #headers:
-        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      #status_code: 201
- 
-
+#  - name: Run build job
+#    uri:
+#      user: admin
+#      password: "{{adminPassword.stdout}}"
+#      force_basic_auth: yes
+#      url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
+#      method: POST
+#      headers:
+#        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+#      status_code: 201
 
 

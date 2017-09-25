@@ -44,6 +44,9 @@
     name: jenkins
     state: present
 
+- name: create .ssh
+  file: path=/var/lib/jenkins/.ssh state=directory
+
 - name: Install git
   apt: 
     name: git
