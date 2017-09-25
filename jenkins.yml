@@ -14,3 +14,11 @@
   become: yes
   tasks:
     - include: tasks/jobs.yml
+
+- hosts: localhost
+  user: root      
+  vars_files:
+    - vars.yml
+  become: yes
+  tasks:
+    - include: tasks/jobs2.yml
