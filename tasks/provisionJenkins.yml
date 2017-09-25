@@ -86,8 +86,6 @@
   args:
     creates: /var/lib/jenkins/.ssh/id_rsa
 
-
-
 - name: get admin password
   command: cat /var/lib/jenkins/secrets/initialAdminPassword
   register: adminPassword
