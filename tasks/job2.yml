@@ -81,15 +81,15 @@
     register: jenkins_build_provision_job_updated
     when: not jenkins_build_provision_job_exists
 
-  - name: Run build_provision job
-    uri:
-      user: admin
-      password: "{{adminPassword.stdout}}"
-      force_basic_auth: yes
-      url: "http://127.0.0.1:8080/job/itrust_build_provision/build?token=build_itrust"
-      method: POST
-      headers:
-        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      status_code: 201
+  #- name: Run build_provision job
+    #uri:
+      #user: admin
+      #password: "{{adminPassword.stdout}}"
+      #force_basic_auth: yes
+      #url: "http://127.0.0.1:8080/job/itrust_build_provision/build?token=build_itrust"
+      #method: POST
+      #headers:
+        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      #status_code: 201
 
 
