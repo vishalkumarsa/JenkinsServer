@@ -12,7 +12,7 @@
       user: admin
       password: "{{adminPassword}}"
       force_basic_auth: yes
-      url: "http://198.211.104.211:8080/crumbIssuer/api/json"
+      url: "http://127.0.0.1:8080/crumbIssuer/api/json"
       return_content: yes
     register: jenkins_crumb
     until: jenkins_crumb.content.find('Please wait while Jenkins is getting ready to work') == -1
@@ -32,7 +32,7 @@
       user: admin
       password: "{{adminPassword}}"
       force_basic_auth: yes
-      url: "http://198.211.104.211:8080/api/json?tree=jobs[name]"
+      url: "http://127.0.0.1:8080/api/json?tree=jobs[name]"
       return_content: yes
     register: jenkins_jobs
     until: jenkins_jobs.content.find('Please wait while Jenkins is getting ready to work') == -1
@@ -52,7 +52,7 @@
       user: admin
       password: "{{adminPassword}}"
       force_basic_auth: yes
-      url: "http://198.211.104.211:8080/createItem?name=checkbox_provision&{{ jenkins_crumb_token }}"
+      url: "http://127.0.0.1:8080/createItem?name=checkbox_provision&{{ jenkins_crumb_token }}"
       method: POST
       headers:
         Content-Type: application/xml
@@ -65,7 +65,7 @@
       user: admin
       password: "{{adminPassword}}"
       force_basic_auth: yes
-      url: "http://198.211.104.211:8080/createItem?name=checkbox_build&{{ jenkins_crumb_token }}"
+      url: "http://127.0.0.1:8080/createItem?name=checkbox_build&{{ jenkins_crumb_token }}"
       method: POST
       headers:
         Content-Type: application/xml
@@ -73,27 +73,27 @@
     register: jenkins_build_job_updated
     when: not jenkins_build_job_exists
 
-  #- name: Run build job
-    #uri:
-      #user: admin
-      #password: "{{adminPassword.stdout}}"
-      #force_basic_auth: yes
-      #url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
-      #method: POST
-      #headers:
-        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      #status_code: 201
+  - name: Run build job
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
+      method: POST
+      headers:
+        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      status_code: 201
 
-  #- name: Run provision job
-    #uri:
-      #user: admin
-      #password: "{{adminPassword.stdout}}"
-      #force_basic_auth: yes
-      #url: "http://127.0.0.1:8080/job/checkbox_provision/build"
-      #method: POST
-      #headers:
-        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      #status_code: 201
+  - name: Run provision job
+    uri:
+      user: admin
+      password: "{{adminPassword}}"
+      force_basic_auth: yes
+      url: "http://127.0.0.1:8080/job/checkbox_provision/build"
+      method: POST
+      headers:
+        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      status_code: 201
  
 
 
