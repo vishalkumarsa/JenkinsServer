@@ -10,6 +10,7 @@
 <url>
 https://github.com/vishalkumarsa/CreateVMCheckbox.io
 </url>
+<credentialsId>github_creds</credentialsId>
 </hudson.plugins.git.UserRemoteConfig>
 </userRemoteConfigs>
 <branches>
