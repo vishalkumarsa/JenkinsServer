@@ -87,16 +87,16 @@
         Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
       status_code: 201
 
-  - name: Run provision job
-    uri:
-      user: admin
-      password: "{{adminPassword.stdout}}"
-      force_basic_auth: yes
-      url: "http://127.0.0.1:8080/job/checkbox_provision/build"
-      method: POST
-      headers:
-        Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
-      status_code: 201
+  #- name: Run provision job
+    #uri:
+      #user: admin
+      #password: "{{adminPassword.stdout}}"
+      #force_basic_auth: yes
+      #url: "http://127.0.0.1:8080/job/checkbox_provision/build"
+      #method: POST
+      #headers:
+        #Jenkins-Crumb : "{{ jenkins_crumb.json.crumb }}"
+      #status_code: 201
  
 
 
