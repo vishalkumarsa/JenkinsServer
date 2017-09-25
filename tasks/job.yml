@@ -33,7 +33,7 @@
       method: POST
       url: 'http://127.0.0.1:8080/credentials/store/system/domain/_/createCredentials'
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       status_code: 302
       headers:
