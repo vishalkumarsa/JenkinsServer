@@ -1,16 +1,19 @@
 - hosts: localhost
-  vars:
-    adminPassword: 0d087db021fb4217aa20044ca3f36ce6
+  
   tasks: 
-
+  
+  - name: get admin password
+    command: cat /var/lib/jenkins/secrets/initialAdminPassword
+    register: adminPassword
+    
   - name: Debug
     debug:
-      msg: "{{adminPassword}}"
+      msg: "{{adminPassword.stdout}}"
 
   - name: Get Jenkins crumb
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/crumbIssuer/api/json"
       return_content: yes
@@ -30,7 +33,7 @@
   - name: Get list of jobs
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/api/json?tree=jobs[name]"
       return_content: yes
@@ -50,7 +53,7 @@
   - name: Create checkbox provision job
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/createItem?name=checkbox_provision&{{ jenkins_crumb_token }}"
       method: POST
@@ -63,7 +66,7 @@
   - name: Create checkbox build job
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/createItem?name=checkbox_build&{{ jenkins_crumb_token }}"
       method: POST
@@ -76,7 +79,7 @@
   - name: Run build job
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
       method: POST
@@ -87,7 +90,7 @@
   - name: Run provision job
     uri:
       user: admin
-      password: "{{adminPassword}}"
+      password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/job/checkbox_provision/build"
       method: POST
