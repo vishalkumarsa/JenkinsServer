@@ -1,5 +1,10 @@
 
   
+  #- name: Get credentials from vault
+    #include_vars:
+      #file: /var/lib/jenkins/secrets.yml
+      #name: vault
+      
   - name: get admin password
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminPassword
