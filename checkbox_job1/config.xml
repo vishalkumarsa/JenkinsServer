@@ -8,7 +8,7 @@
 <userRemoteConfigs>
 <hudson.plugins.git.UserRemoteConfig>
 <url>
-https://github.com/vishalkumarsa/CreateVMCheckbox.io
+https://github.com/vishalkumarsa/CreateVMCheckbox.io.git
 </url>
 <credentialsId>github_creds</credentialsId>
 </hudson.plugins.git.UserRemoteConfig>
