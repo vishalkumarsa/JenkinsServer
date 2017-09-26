@@ -42,7 +42,8 @@ https://github.com/vishalkumarsa/CreateVMCheckbox.io.git
 <builders>
 <hudson.tasks.Shell>
 <command>
-ansible-playbook vagrantvm.yml --sudo ansible-playbook -i inventory checkbox.yml --sudo
+ansible-playbook vagrantvm.yml --sudo 
+ansible-playbook -i inventory checkbox.yml --sudo
 </command>
 </hudson.tasks.Shell>
 </builders>
