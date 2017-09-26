@@ -30,7 +30,8 @@
 <builders>
 <hudson.tasks.Shell>
 <command>
-ansible-playbook vagrantvm.yml --sudo ansible-playbook -i inventory itrust.yml --sudo
+ansible-playbook vagrantvm.yml --sudo
+ansible-playbook -i inventory itrust.yml --sudo
 </command>
 </hudson.tasks.Shell>
 </builders>
