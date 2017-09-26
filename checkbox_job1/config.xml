@@ -7,9 +7,7 @@
 <configVersion>2</configVersion>
 <userRemoteConfigs>
 <hudson.plugins.git.UserRemoteConfig>
-<url>
-https://github.com/vishalkumarsa/CreateVMCheckbox.io.git
-</url>
+<url>https://github.com/vishalkumarsa/CreateVMCheckbox.io.git</url>
 <credentialsId>github_creds</credentialsId>
 </hudson.plugins.git.UserRemoteConfig>
 </userRemoteConfigs>
@@ -42,8 +40,7 @@ https://github.com/vishalkumarsa/CreateVMCheckbox.io.git
 <builders>
 <hudson.tasks.Shell>
 <command>
-ansible-playbook vagrantvm.yml --sudo 
-ansible-playbook -i inventory checkbox.yml --sudo
+ansible-playbook vagrantvm.yml --sudo; ansible-playbook -i inventory checkbox.yml --sudo
 </command>
 </hudson.tasks.Shell>
 </builders>
