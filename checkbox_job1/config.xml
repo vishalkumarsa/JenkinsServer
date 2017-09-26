@@ -40,7 +40,7 @@
 <builders>
 <hudson.tasks.Shell>
 <command>
-ansible-playbook vagrantvm.yml --sudo; ansible-playbook -i inventory checkbox.yml --sudo
+ansible-playbook vagrantvm.yml --sudo; ansible-playbook -i inventory checkbox.yml --sudo -e 'ansible_python_interpreter=/usr/bin/python3'
 </command>
 </hudson.tasks.Shell>
 </builders>
