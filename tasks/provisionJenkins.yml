@@ -19,16 +19,10 @@
     name: python3-pip
     state: present
 
-- name: Install dopy
-  pip: 
-    name: dopy
-    executable: pip3
-
 - name: Install passlib
   pip:
     name: passlib
     executable: pip3
-
 
 - name: Add Jdk repository
   apt_repository: repo='ppa:openjdk-r/ppa' state=present update_cache=yes 
@@ -92,10 +86,6 @@
 - name: get admin password
   command: cat /var/lib/jenkins/secrets/initialAdminPassword
   register: adminPassword
-
-- name: debug
-  debug:
-    msg: "{{adminPassword.stdout}}"
 
 - name: Get Jenkins crumb
   uri:
