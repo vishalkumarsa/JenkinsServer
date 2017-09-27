@@ -1,14 +1,16 @@
+
+  - name: Get credentials using vault
+    include_vars:
+      file: secrets.yml
+      name: secrets
+      
   - name: get admin password
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminPassword
-    
-  - name: Debug
-    debug:
-      msg: "{{adminPassword.stdout}}"
 
   - name: Get Jenkins crumb
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/crumbIssuer/api/json"
@@ -22,13 +24,9 @@
     set_fact:
       jenkins_crumb_token: "{{ jenkins_crumb.json.crumbRequestField }}={{ jenkins_crumb.json.crumb }}"
 
-  - name: debug crumb
-    debug:
-      msg: "{{jenkins_crumb.json.crumb}}"
-
   - name: Get list of jobs
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/api/json?tree=jobs[name]"
@@ -44,7 +42,7 @@
 
   - name: Create build_provision itrust job
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/createItem?name=itrust_build_provision&{{ jenkins_crumb_token }}"
@@ -57,7 +55,7 @@
 
   - name: Run build_provision job
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/job/itrust_build_provision/build?token=build_itrust"
