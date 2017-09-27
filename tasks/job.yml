@@ -1,6 +1,6 @@
 
   
-  - name: Get credentials from vault
+  - name: Get credentials using vault
     include_vars:
       file: secrets.yml
       name: secrets
