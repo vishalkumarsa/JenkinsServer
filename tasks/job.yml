@@ -1,21 +1,17 @@
 
   
-  #- name: Get credentials from vault
-    #include_vars:
-      #file: /var/lib/jenkins/secrets.yml
-      #name: vault
+  - name: Get credentials from vault
+    include_vars:
+      file: secrets.yml
+      name: secrets
       
   - name: get admin password
     command: cat /var/lib/jenkins/secrets/initialAdminPassword
     register: adminPassword
-    
-  - name: Debug
-    debug:
-      msg: "{{adminPassword.stdout}}"
 
   - name: Get Jenkins crumb
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/crumbIssuer/api/json"
@@ -29,15 +25,11 @@
     set_fact:
       jenkins_crumb_token: "{{ jenkins_crumb.json.crumbRequestField }}={{ jenkins_crumb.json.crumb }}"
 
-  - name: debug crumb
-    debug:
-      msg: "{{jenkins_crumb.json.crumb}}"
-
   - name: Insert credentials
     uri:
       method: POST
       url: 'http://127.0.0.1:8080/credentials/store/system/domain/_/createCredentials'
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       status_code: 302
@@ -49,8 +41,8 @@
           "credentials": {
             "scope": "GLOBAL",
             "id": "github_creds",
-            "username": "vishalkumarsa",
-            "password": "Ganapa#228",
+            "username": "{{secrets['git_user']}}",
+            "password": "{{secrets['git_password']}}",
             "description": "Github_creds",
             "$class": "com.cloudbees.plugins.credentials.impl.UsernamePasswordCredentialsImpl"
            }
@@ -58,7 +50,7 @@
 
   - name: Get list of jobs
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/api/json?tree=jobs[name]"
@@ -78,7 +70,7 @@
 
   - name: Create checkbox provision job
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/createItem?name=checkbox_provision&{{ jenkins_crumb_token }}"
@@ -91,7 +83,7 @@
 
   - name: Create checkbox build job
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/createItem?name=checkbox_build&{{ jenkins_crumb_token }}"
@@ -104,7 +96,7 @@
 
   - name: Run build job
     uri:
-      user: admin
+      user: {{secrets['jenkins_user']}}
       password: "{{adminPassword.stdout}}"
       force_basic_auth: yes
       url: "http://127.0.0.1:8080/job/checkbox_build/build?token=build_checkbox"
