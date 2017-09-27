@@ -1,3 +1,8 @@
+- name: Get credentials using vault
+    include_vars:
+      file: secrets.yml
+      name: secrets
+
 - name: Install ca-certificates
   apt: name=ca-certificates state=present
 
@@ -89,7 +94,7 @@
 
 - name: Get Jenkins crumb
   uri:
-    user: admin
+    user: {{secrets['jenkins_user']}}
     password: "{{adminPassword.stdout}}"
     force_basic_auth: yes
     url: "http://127.0.0.1:8080/crumbIssuer/api/json"
@@ -105,7 +110,7 @@
 
 - name: Install plugins
   uri:
-    user: admin
+    user: {{secrets['jenkins_user']}}
     password: "{{adminPassword.stdout}}"
     force_basic_auth: yes
     url: "http://127.0.0.1:8080/pluginManager/install?plugin.{{ item }}.default=on&{{ jenkins_crumb_token }}"
@@ -117,7 +122,7 @@
 
 - name: Wait for plugins to be installed
   uri:
-    user: admin
+    user: {{secrets['jenkins_user']}}
     password: "{{adminPassword.stdout}}"
     force_basic_auth: yes
     url: "http://127.0.0.1:8080/updateCenter/installStatus?{{ jenkins_crumb_token }}"
